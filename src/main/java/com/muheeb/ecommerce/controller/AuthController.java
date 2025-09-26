@@ -2,11 +2,16 @@ package com.muheeb.ecommerce.controller;
 
 import com.muheeb.ecommerce.model.AppRole;
 import com.muheeb.ecommerce.model.Role;
+import com.muheeb.ecommerce.model.User;
 import com.muheeb.ecommerce.repositories.RoleRepository;
 import com.muheeb.ecommerce.repositories.UserRepository;
 import com.muheeb.ecommerce.security.jwt.JwtUtils;
 import com.muheeb.ecommerce.security.request.LoginRequest;
+import com.muheeb.ecommerce.security.request.SignupRequest;
+import com.muheeb.ecommerce.security.response.MessageResponse;
+import com.muheeb.ecommerce.security.response.UserInfoResponse;
 import com.muheeb.ecommerce.security.service.UserDetailsImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,13 +23,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RestController
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
