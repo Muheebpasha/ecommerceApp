@@ -94,32 +94,25 @@ public class CartServiceImpl implements CartService{
     public List<CartDTO> getAllCarts() {
         List<Cart> carts = cartRepository.findAll();
 
-        if (carts.isEmpty()) {
+        if (carts.size() == 0) {
             throw new APIException("No cart exists");
         }
 
-        List<CartDTO> cartDTOs = carts.stream()
-                .map(cart -> {
-                    // Map Cart entity → CartDTO
-                    CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+        return carts.stream().map(cart -> {
+            CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
-                    // Map CartItem → ProductDTO
-                    List<ProductDTO> products = cart.getCartItems().stream()
-                            .map( item -> {
-                                ProductDTO dto = modelMapper.map(item.getProduct(), ProductDTO.class);
-                                dto.setQuantity(item.getQuantity());
-                                return dto;
-                            })
-                            .collect(Collectors.toList());
+            List<ProductDTO> products = cart.getCartItems().stream().map(cartItem -> {
+                ProductDTO productDTO = modelMapper.map(cartItem.getProduct(), ProductDTO.class);
+                productDTO.setQuantity(cartItem.getQuantity()); // Set the quantity from CartItem
+                return productDTO;
+            }).toList();
 
-                    // Add product list to CartDTO
-                    cartDTO.setProducts(products);
 
-                    return cartDTO;
-                })
-                .collect(Collectors.toList());
+            cartDTO.setProducts(products);
 
-        return cartDTOs;
+            return cartDTO;
+
+        }).toList();
     }
 
     @Override
